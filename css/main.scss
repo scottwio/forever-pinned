@@ -1,0 +1,55 @@
+html, body{
+  margin: 0;
+  padding: 0;
+}
+.container{
+  width:600px;
+  margin: 0px auto;
+}
+
+h2{
+  margin: 1.5em 0 1em 0;
+}
+
+label{
+  font-weight: normal;
+}
+
+.url-item{
+  border-bottom:1px solid #eeeeee;
+  padding:10px 0;
+  .grid-col8{
+    padding-top: 6px;
+  }
+}
+
+.grid-row:after{
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+[class *="grid-col"]{
+  float:left;
+}
+
+.grid-col8{
+  width: 80%;
+}
+
+.grid-col2{
+  width:20%;
+}
+
+.btn-danger, .btn-success{
+  float: right;
+  width:94%;
+}
+
+.bg-danger, .bg-warning{
+  margin-top:5px;
+  padding:10px;
+}
