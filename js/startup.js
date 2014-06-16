@@ -1,6 +1,6 @@
 // TODO: Add comments
 // TODO: Clean up code
-// TODO: close process after run
+// TODO: close process after run if option is not selected
 
 var buildTabs = {
   list:[],
@@ -48,27 +48,42 @@ var buildTabs = {
   closeDups:function(){
     /**
      * If you open a number of different windows all with the same pinned tab
-     * chrome will take all the pinned tabs when quit and open then all in the new
+     * chrome will take all the pinned tabs when quit and open then all in the
      * new window. This closes any existing dups before we open any new tabs.
      */
     var self= this;
 
     this.readAllTabs().then(function(data){
       var arr  = data;
-      var dups = [];
+      var dupsId = [];
+      var dupsUrl = [];
+      var list = [];
       var defer = Q.defer();
 
-      arr.sort( function( a, b){ return a.url < b.url ? -1 : 1;} );
-      for( var i=0; i<arr.length-1; i++ ) {
-        if ( arr[i].url == arr[i+1].url ) {
-          dups.push(arr[i].id);
+      chrome.storage.sync.get('items', function(urlList){
+        var urlList = urlList.items;
+
+        // clear list of urls
+        for(var i=0; i < urlList.length; i++){
+          list.push(urlList[i].url);
         }
-      }
 
-      chrome.storage.sync.get('items', function(data){
-        // compare data.items to dups here
+        // remove extra slash from arrs urls
+        for(var i=0; i<arr.length; i++){
+          arr[i].url =self._removeSlash(arr[i].url);
+        }
 
-        chrome.tabs.remove(dups, function(){
+        // filter out dups that are in list of urls
+        arr.sort( function(a, b){ return a.url < b.url ? -1 : 1;});
+        for( var i=0; i<arr.length-1; i++ ) {
+          if ( arr[i].url == arr[i+1].url ) {
+            if(list.indexOf(arr[i].url) > -1){
+              dupsId.push(arr[i].id);
+              dupsUrl.push(arr[i].url);
+            }
+          }
+        }
+        chrome.tabs.remove(dupsId, function(){
           self.get();
         });
       });
@@ -106,6 +121,12 @@ var buildTabs = {
       });
       self.create();
     });
+  },
+  _removeSlash:function(str){
+    if (str.substr(-1) === '/') {
+      str = str.substr(0, str.length - 1);
+    }
+    return str;
   }
 };
 
@@ -137,7 +158,7 @@ var applyOptions = {
   },
   apply:function(){
     /**
-     * apply any settings the needed
+     * apply any settings that are needed
      */
     if(this.options.reopen){
       chrome.windows.onCreated.addListener(function(){

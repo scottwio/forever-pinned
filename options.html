@@ -31,8 +31,7 @@
           <input type="submit" class="btn btn-success" value="Add Url">
         </div>
       </div>
-
-      <p class="bg-warning" ng-show="!urlForm.$valid">Please enter a full url, make sure to include http://</p>
+      <p class="bg-warning" ng-show="!urlForm.$valid">Please enter a full url, make sure to include http:// or https://</p>
     </form>
   </div>
 
@@ -49,7 +48,7 @@
     </div>
 
   <div ng-controller="optionsCtrl">
-    <h2>Options</h2>
+    <h2>Settings</h2>
     <form>
       <p>
       <input type="checkbox" ng-click="reopenChange()" ng-model="reopen" value="{{reopen}}" name="reopen" />
