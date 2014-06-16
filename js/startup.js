@@ -3,6 +3,36 @@
 
 var buildTabs = {
   list:[],
+  createSyncItems:function(){
+    /**
+     * have the sync items already been create aka has the plugin
+     * been run before or is this it's first run
+     */
+    var deferItems = Q.defer();
+    var deferOptions = Q.defer();
+
+    chrome.storage.sync.get('items', function(data){
+      if(typeof(data.items) === "undefined"){
+        chrome.storage.sync.set({items:[]}, function (data){
+          deferItems.resolve();
+        });
+      }else{
+        deferItems.resolve();
+      }
+    });
+
+    chrome.storage.sync.get('options', function(data){
+      if(typeof(data.options) === "undefined"){
+        chrome.storage.sync.set({options:{}}, function(data){
+          deferOptions.resolve();
+        });
+      }else{
+        deferOptions.resolve();
+      }
+    });
+
+    return [deferItems.promise, deferOptions.promise];
+  },
   get:function(){
     /**
      * get list of URL to open from google sync
@@ -20,7 +50,11 @@ var buildTabs = {
     /**
      * kick it off
      */
-     this.closeDups();
+    var self = this;
+     var createSyncItemsPromise = this.createSyncItems();
+     Q.all(createSyncItemsPromise).then(function(){
+       self.closeDups();
+     });
   },
   create:function(){
     /**

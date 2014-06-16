@@ -53,7 +53,9 @@ app.service('optionService', function ($q) {
       reopen:false
     },
     save:function(){
-      chrome.storage.sync.set({options:option.options}, function(data){});
+      chrome.storage.sync.set({options:option.options}, function(data){
+        console.log('options updated');
+      });
     },
     get:function(){
       var self = this;
