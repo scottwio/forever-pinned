@@ -1,6 +1,4 @@
-// TODO: Leave focus on main tab
 // TODO: drag and drop rearrange https://github.com/angular-ui/ui-sortable
-// TODO: Option to reopen all tabs when creating a new window
 // TODO: Icon
 // TODO: Tests
 
@@ -141,11 +139,6 @@ app.directive('urlvaildation', function () {
           return undefined;
         }
       });
-      // set inital state
-      /*ngModel.$formatters.unshift(function (value) {
-        ngModel.$setValidity('url', false);
-        return undefined;
-      });*/
     }
   };
 });

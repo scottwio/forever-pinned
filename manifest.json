@@ -3,7 +3,7 @@
   "name": "Pinny",
   "permissions": ["storage","tabs"],
   "background": {
-    "scripts": ["bower_components/q/q.js", "js/startup.js"]
+    "scripts": ["js/q.js", "js/startup.js"]
     //"persistent": false
   },
   "options_page": "options.html",

@@ -1,4 +1,3 @@
-// TODO: Add comments
 // TODO: Clean up code
 // TODO: close process after run if option is not selected
 
