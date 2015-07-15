@@ -105,17 +105,18 @@ var buildTabs = {
         for(var i=0; i<arr.length; i++){
           arr[i].url =self._removeSlash(arr[i].url);
         }
-
-        // filter out dups that are in list of urls
-        arr.sort( function(a, b){ return a.url < b.url ? -1 : 1;});
-        for( var i=0; i<arr.length-1; i++ ) {
-          if ( arr[i].url == arr[i+1].url ) {
-            if(list.indexOf(arr[i].url) > -1){
-              dupsId.push(arr[i].id);
-              dupsUrl.push(arr[i].url);
-            }
-          }
-        }
+       
+       var dupsId = [];
+       var unqi = _.uniq(arr, 'url');
+       
+       arr  = _.filter(arr, function(item){
+        return !(_.includes(unqi, item));
+       })
+       
+       _.forEach(arr, function(item){
+         dupsId.push(item.id);
+       });
+        
         chrome.tabs.remove(dupsId, function(){
           self.get();
         });
