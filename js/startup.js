@@ -202,6 +202,22 @@ var applyOptions = {
   }
 };
 
+var setupClick = {
+    notRegistered: false,
+    init: function(){
+        if(!this.notRegistered) {
+            /**
+            * set up click action
+            */
+            chrome.browserAction.onClicked.addListener(function() {
+                buildTabs.init();
+            });
+        }
+        this.notRegistered = true;
+    }
+};
+
 // start up the app crate tabs
 buildTabs.init();
 applyOptions.init();
+setupClick.init();
