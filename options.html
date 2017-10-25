@@ -58,6 +58,12 @@
       </p>
       <p class="bg-warning">You will need to restart chrome before settings take effect</p>
     </form>
+    <form>
+      <p>
+      <input type="checkbox" ng-click="ignoreParamsChange()" ng-model="ignoreParams" value="{{ignoreParams}}" name="ignoreParams" />
+        <label>Ignore url parameters when comparing openned and saved tabs (site.com/?param1=value....)</label>
+      </p>
+    </form>
   </div>
   <footer>Forever pinned created by <a href="http://www.scottw.io/">scottw.io</a> source is available on <a href="https://github.com/scottwio/forever-pinned">Forever pinned</a></footer>
   </div>

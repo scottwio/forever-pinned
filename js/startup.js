@@ -143,13 +143,23 @@ var buildTabs = {
         if (openTabs[i].url.substr(-1) === '/') {
           openTabs[i].url =  openTabs[i].url.substr(0, openTabs[i].url.length - 1);
          }
+        
+        // remove params if configured so we can compare without them
+        if(applyOptions.options.ignoreParams) {
+          openTabs[i].url =self._removeParams(openTabs[i].url);
+        }
         open.push(openTabs[i].url);
       }
       for(var i=0; i < urlList.length; i++){
         list.push(urlList[i].url);
       }
       list.forEach(function(item){
-        if(!(open.indexOf(item)> -1)){
+        var localItem = item;        
+        // remove params if configured
+        if(applyOptions.options.ignoreParams) {
+          localItem =self._removeParams(localItem);
+        }
+        if(!(open.indexOf(localItem)> -1)){
           self.list.push({url:item});
         }
       });
@@ -159,6 +169,13 @@ var buildTabs = {
   _removeSlash:function(str){
     if (str.substr(-1) === '/') {
       str = str.substr(0, str.length - 1);
+    }
+    return str;
+  },
+  _removeParams:function(str){
+    var n = str.search(/\?/);
+    if (n >= 0) {
+      str = str.substr(0, n);
     }
     return str;
   }
@@ -202,6 +219,22 @@ var applyOptions = {
   }
 };
 
+var setupClick = {
+    notRegistered: false,
+    init: function(){
+        if(!this.notRegistered) {
+            /**
+            * set up click action
+            */
+            chrome.browserAction.onClicked.addListener(function() {
+                buildTabs.init();
+            });
+        }
+        this.notRegistered = true;
+    }
+};
+
 // start up the app crate tabs
 buildTabs.init();
 applyOptions.init();
+setupClick.init();
