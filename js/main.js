@@ -46,11 +46,12 @@ app.service("urlList", function ($q) {
 app.service('optionService', function ($q) {
   /**
    * Service that gets and sets the options section of the UI
-   * @type {{options: {reopen: boolean}, save: Function, setReopen: Function}}
+   * @type {{options: {reopen: boolean, ignoreParams: false}, save: Function, setReopen: Function}, setIgnoreParams: Function}}
    */
   var option = {
     options:{
-      reopen:false
+      reopen:false,
+      ignoreParams:false
     },
     save:function(){
       chrome.storage.sync.set({options:option.options}, function(data){
@@ -66,8 +67,12 @@ app.service('optionService', function ($q) {
       });
       return defer.promise;
     },
-    set:function(value){
+    setReopen:function(value){
       this.options.reopen = value;
+      this.save();
+    },
+    setIgnoreParams:function(value){
+      this.options.ignoreParams = value;
       this.save();
     }
   };
@@ -96,10 +101,15 @@ app.controller('optionsCtrl', function($scope, optionService){
    */
   optionService.get().then(function(data){
     $scope.reopen = optionService.options.reopen;
+    $scope.ignoreParams = optionService.options.ignoreParams;
   });
 
   $scope.reopenChange = function(){
-    optionService.set(!$scope.reopen);
+    optionService.setReopen(!$scope.reopen);
+  }
+  
+  $scope.ignoreParamsChange = function(){
+    optionService.setIgnoreParams(!$scope.ignoreParams);
   }
 });
 
