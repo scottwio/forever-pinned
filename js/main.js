@@ -1,4 +1,3 @@
-// TODO: drag and drop rearrange https://github.com/angular-ui/ui-sortable
 // TODO: Icon
 // TODO: Tests
 
