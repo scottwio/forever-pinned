@@ -133,7 +133,8 @@ var buildTabs = {
     var self = this;
     var list = [];
     var open = [];
-    var domain = "";
+    var notOpenList = [];
+    var alreadyOpenedList = [];
 
     // reset list
     this.list = [];
@@ -153,14 +154,20 @@ var buildTabs = {
       for(var i=0; i < urlList.length; i++){
         list.push(urlList[i].url);
       }
-      list.forEach(function(item){
-        var localItem = item;        
-        // remove params if configured
-        if(applyOptions.options.ignoreParams) {
-          localItem =self._removeParams(localItem);
+      notOpenList = list.slice(0);
+      for(var i = 0; i < open.length; i++) {
+        for(var j = 0; j < list.length; j++) {
+          // Check if the URL of this open tab contains
+          // a URL from our list of tabs to open.
+          if (open[i].includes(list[j])) {
+            alreadyOpenedList.push(open[i]);
+          }
         }
-        if(!(open.indexOf(localItem)> -1)){
-          self.list.push({url:item});
+      }
+      // Remove duplicate tabs
+      open.forEach(function(openItem){
+        if(!(alreadyOpenedList.indexOf(openItem)> -1)){
+          self.list.push({url:openItem});
         }
       });
       self.create();
