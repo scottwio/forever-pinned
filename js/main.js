@@ -46,7 +46,7 @@ app.service("urlList", function ($q) {
 app.service('optionService', function ($q) {
   /**
    * Service that gets and sets the options section of the UI
-   * @type {{options: {reopen: boolean, ignoreParams: false}, save: Function, setReopen: Function}, setIgnoreParams: Function}}
+   * @type {{options: {reopen: false, ignoreParams: true}, save: Function, setReopen: Function}, setIgnoreParams: Function}}
    */
   var option = {
     options:{
