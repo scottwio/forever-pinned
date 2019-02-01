@@ -51,7 +51,7 @@ app.service('optionService', function ($q) {
   var option = {
     options:{
       reopen:false,
-      ignoreParams:false
+      ignoreParams:true
     },
     save:function(){
       chrome.storage.sync.set({options:option.options}, function(data){

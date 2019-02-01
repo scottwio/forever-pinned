@@ -133,7 +133,6 @@ var buildTabs = {
     var self = this;
     var list = [];
     var open = [];
-    var notOpenList = [];
     var alreadyOpenedList = [];
 
     // reset list
@@ -154,22 +153,36 @@ var buildTabs = {
       for(var i=0; i < urlList.length; i++){
         list.push(urlList[i].url);
       }
-      notOpenList = list.slice(0);
-      for(var i = 0; i < open.length; i++) {
-        for(var j = 0; j < list.length; j++) {
-          // Check if the URL of this open tab contains
-          // a URL from our list of tabs to open.
-          if (open[i].includes(list[j])) {
-            alreadyOpenedList.push(open[i]);
+      if(applyOptions.options.ignoreParams) {
+        notOpenList = list.slice(0);
+        for(var i = 0; i < open.length; i++) {
+          for(var j = 0; j < list.length; j++) {
+            // Check if the URL of this open tab contains
+            // a URL from our list of tabs to open.
+            if (open[i].includes(list[j])) {
+              alreadyOpenedList.push(list[j]);
+            }
           }
         }
+        // Now we have a list of the pinned tabs we want which are already opened.
+        // The below loop checks the total list of tabs we want
+        list.forEach(function(listItem){
+            // If the listItem isn't in the alreadyOpenedList
+            if (!(alreadyOpenedList.indexOf(listItem) >= 0)) {
+              // Add it to the list of urls to open
+              self.list.push({url:listItem});
+            }
+        });
       }
-      // Remove duplicate tabs
-      open.forEach(function(openItem){
-        if(!(alreadyOpenedList.indexOf(openItem)> -1)){
-          self.list.push({url:openItem});
-        }
-      });
+      else {
+        // If you don't want to ignore parameters just open more tabs
+        list.forEach(function(item){
+          var localItem = item;
+          if(!(open.indexOf(localItem)> -1)){
+            self.list.push({url:item});
+          }
+        });
+      }
       self.create();
     });
   },
