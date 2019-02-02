@@ -133,7 +133,7 @@ var buildTabs = {
     var self = this;
     var list = [];
     var open = [];
-    var domain = "";
+    var alreadyOpenedList = [];
 
     // reset list
     this.list = [];
@@ -143,39 +143,47 @@ var buildTabs = {
         if (openTabs[i].url.substr(-1) === '/') {
           openTabs[i].url =  openTabs[i].url.substr(0, openTabs[i].url.length - 1);
          }
-        
-        // remove params if configured so we can compare without them
-        if(applyOptions.options.ignoreParams) {
-          openTabs[i].url =self._removeParams(openTabs[i].url);
-        }
         open.push(openTabs[i].url);
       }
       for(var i=0; i < urlList.length; i++){
         list.push(urlList[i].url);
       }
-      list.forEach(function(item){
-        var localItem = item;        
-        // remove params if configured
-        if(applyOptions.options.ignoreParams) {
-          localItem =self._removeParams(localItem);
+      if(applyOptions.options.ignoreParams) {
+        notOpenList = list.slice(0);
+        for(var i = 0; i < open.length; i++) {
+          for(var j = 0; j < list.length; j++) {
+            // Check if the URL of this open tab contains
+            // a URL from our list of tabs to open.
+            if (open[i].includes(list[j])) {
+              alreadyOpenedList.push(list[j]);
+            }
+          }
         }
-        if(!(open.indexOf(localItem)> -1)){
-          self.list.push({url:item});
-        }
-      });
+        // Now we have a list of the pinned tabs we want which are already opened.
+        // The below loop checks the total list of tabs we want
+        list.forEach(function(listItem){
+            // If the listItem isn't in the alreadyOpenedList
+            if (!(alreadyOpenedList.indexOf(listItem) >= 0)) {
+              // Add it to the list of urls to open
+              self.list.push({url:listItem});
+            }
+        });
+      }
+      else {
+        // If you don't want to ignore parameters just open more tabs
+        list.forEach(function(item){
+          var localItem = item;
+          if(!(open.indexOf(localItem)> -1)){
+            self.list.push({url:item});
+          }
+        });
+      }
       self.create();
     });
   },
   _removeSlash:function(str){
     if (str.substr(-1) === '/') {
       str = str.substr(0, str.length - 1);
-    }
-    return str;
-  },
-  _removeParams:function(str){
-    var n = str.search(/\?/);
-    if (n >= 0) {
-      str = str.substr(0, n);
     }
     return str;
   }
