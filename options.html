@@ -39,13 +39,16 @@
 
     <div ng-controller="listCtrl" ng-show="items.length">
       <h2>Current pinned tabs</h2>
-      <div class="grid-row url-item"  ng-repeat="item in items track by $index">
-        <div class="grid-col8">
-          <span>{{item.url}}</span>
-        </div>
-        <div class="grid-col2">
-      <button type="button" class="btn btn-danger" ng-click="remove(item, element)">Remove</button>
+      <div ui-sortable="sortableOptions" ng-model="items">
+        <div class="grid-row url-item" ng-repeat="item in items track by $index">
+          <div class="grid-col8">
+            <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+            <span>{{item.url}}</span>
           </div>
+          <div class="grid-col2">
+            <button type="button" class="btn btn-danger" ng-click="remove(item, element)">Remove</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -69,7 +72,10 @@
   </div>
 
 </div>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/sortable.min.js"></script>
 </body>
 </html>

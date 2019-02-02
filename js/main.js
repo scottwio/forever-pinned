@@ -1,8 +1,7 @@
-// TODO: drag and drop rearrange https://github.com/angular-ui/ui-sortable
 // TODO: Icon
 // TODO: Tests
 
-var app = angular.module('app', []);
+var app = angular.module('app', ['ui.sortable']);
 
 app.service("urlList", function ($q) {
   /**
@@ -122,6 +121,12 @@ app.controller('listCtrl', function ($scope, urlList, $q) {
   });
   $scope.remove = function (item) {
     urlList.remove(item);
+  };
+  $scope.sortableOptions = {
+    'stop': function () {
+        urlList.list = $scope.items;
+        urlList.save();
+    }
   };
 });
 
